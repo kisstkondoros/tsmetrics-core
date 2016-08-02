@@ -1,0 +1,19 @@
+{
+  "name": "tsmetrics-core",
+  "version": "0.0.1",
+  "description": "Computes complexity in TypeScript / JavaScript files.",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "javascript",
+    "typescript",
+    "metrics"
+  ],
+  "author": "Tamas Kiss",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^1.8.10",
+    "fs": "0.0.2"
+  }
+}

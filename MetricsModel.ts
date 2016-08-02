@@ -1,0 +1,80 @@
+import {IMetricsConfiguration, IMetricsModel} from "./index";
+
+export class MetricsModel implements IMetricsModel {
+  line: number;
+  column: number;
+  complexity: number;
+  visible: boolean;
+  children: MetricsModel[] = [];
+  description: string;
+  start: number;
+  end: number;
+  text: string;
+
+  constructor(start: number, end: number, text: string, line: number, column: number, complexity: number, description: string, visible?: boolean) {
+    this.start = start;
+    this.end = end;
+    this.text = text;
+    this.line = line;
+    this.column = column;
+    this.complexity = complexity;
+    this.visible = !!visible;
+    this.description = description;
+    let parenthesisIndex = this.text.indexOf('(');
+    let bracketIndex = this.text.indexOf('{');
+    let lineFeedIndex = this.text.indexOf('\r');
+    let arrowOperatorIndex = this.text.indexOf('=>');
+    parenthesisIndex = parenthesisIndex < 0 ? this.text.length : (parenthesisIndex + 1);
+    bracketIndex = bracketIndex < 0 ? this.text.length : (bracketIndex + 1);
+    lineFeedIndex = lineFeedIndex < 0 ? this.text.length : (lineFeedIndex + 1);
+    arrowOperatorIndex = arrowOperatorIndex < 0 ? this.text.length : (arrowOperatorIndex + 2);
+    var subStringIndex = Math.min(parenthesisIndex, bracketIndex, lineFeedIndex, arrowOperatorIndex, this.text.length);
+    if (subStringIndex < 0) {
+      subStringIndex = Math.min(20, this.text.length);
+    }
+    var overflow = this.text.length > subStringIndex ? "..." : "";
+    this.text = this.text.substring(0, subStringIndex) + overflow
+  }
+
+  public getSumComplexity(): number {
+    return this.children.reduce((item1, item2) => item1 + item2.getSumComplexity(), this.complexity);
+  }
+
+  public toLogString(level: string): string {
+    var complexity = this.pad(this.getSumComplexity() + "", 5);
+    var line = this.pad(this.line + "");
+    var column = this.pad(this.column + "");
+
+    return `${complexity} - Ln ${line} Col ${column} ${level} ${this.text}`;
+  }
+
+  private pad(str: string, lenghtToFit: number = 4): string {
+    var pad = new Array(lenghtToFit).join(" ");
+    return pad.substring(0, Math.max(0, pad.length - str.length)) + str;
+  }
+
+  public toString(settings: IMetricsConfiguration): string {
+    let complexitySum: number = this.getSumComplexity();
+    let instruction: string = '';
+    if (complexitySum > settings.ComplexityLevelExtreme) {
+      instruction = settings.ComplexityLevelExtremeDescription;
+    } else if (complexitySum > settings.ComplexityLevelHigh) {
+      instruction = settings.ComplexityLevelHighDescription;
+    } else if (complexitySum > settings.ComplexityLevelNormal) {
+      instruction = settings.ComplexityLevelNormalDescription;
+    } else if (complexitySum > settings.ComplexityLevelLow) {
+      instruction = settings.ComplexityLevelLowDescription;
+    }
+    let template = (settings.ComplexityTemplate + '');
+    if (!settings.ComplexityTemplate || template.trim().length == 0) {
+      template = 'Complexity is {0} {1}';
+    }
+
+    return template.replace('{0}', complexitySum + '').replace('{1}', instruction)
+  }
+
+  public getExplanation(): string {
+    let allRelevant: MetricsModel[] = [this];
+    return allRelevant.map(item => "+" + item.complexity + " for " + item.description + " in Ln " + item.line + ", Col " + item.column).reduce((item1, item2) => item1 + item2);
+  }
+}
