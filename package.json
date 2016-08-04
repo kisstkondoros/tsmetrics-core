@@ -1,9 +1,13 @@
 {
   "name": "tsmetrics-core",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Computes complexity in TypeScript / JavaScript files.",
   "scripts": {
     "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kisstkondoros/tsmetrics-core.git"
   },
   "keywords": [
     "javascript",
