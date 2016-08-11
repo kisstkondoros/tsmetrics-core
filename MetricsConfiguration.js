@@ -1,6 +1,12 @@
 "use strict";
 var MetricsConfiguration = (function () {
     function MetricsConfiguration() {
+        this.MetricsForClassDeclarationsToggled = true;
+        this.MetricsForConstructorDescriptionsToggled = true;
+        this.MetricsForEnumDeclarationDescriptionsToggled = true;
+        this.MetricsForFunctionDeclarationsToggled = true;
+        this.MetricsForFunctionExpressionsToggled = true;
+        this.MetricsForMethodDeclarationsToggled = true;
         this.MetricsForArrowFunctionsToggled = true;
         this.ComplexityLevelExtreme = 25;
         this.ComplexityLevelHigh = 10;

@@ -5,13 +5,13 @@ export class MetricsModel implements IMetricsModel {
   column: number;
   complexity: number;
   visible: boolean;
-  children: MetricsModel[] = [];
+  children: IMetricsModel[] = [];
   description: string;
   start: number;
   end: number;
   text: string;
 
-  constructor(start: number, end: number, text: string, line: number, column: number, complexity: number, description: string, visible?: boolean) {
+  constructor(start: number, end: number, text: string, line: number, column: number, complexity: number, description: string, trim?: boolean, visible?: boolean) {
     this.start = start;
     this.end = end;
     this.text = text;
@@ -20,20 +20,29 @@ export class MetricsModel implements IMetricsModel {
     this.complexity = complexity;
     this.visible = !!visible;
     this.description = description;
-    let parenthesisIndex = this.text.indexOf('(');
-    let bracketIndex = this.text.indexOf('{');
-    let lineFeedIndex = this.text.indexOf('\r');
-    let arrowOperatorIndex = this.text.indexOf('=>');
-    parenthesisIndex = parenthesisIndex < 0 ? this.text.length : (parenthesisIndex + 1);
-    bracketIndex = bracketIndex < 0 ? this.text.length : (bracketIndex + 1);
-    lineFeedIndex = lineFeedIndex < 0 ? this.text.length : (lineFeedIndex + 1);
-    arrowOperatorIndex = arrowOperatorIndex < 0 ? this.text.length : (arrowOperatorIndex + 2);
-    var subStringIndex = Math.min(parenthesisIndex, bracketIndex, lineFeedIndex, arrowOperatorIndex, this.text.length);
-    if (subStringIndex < 0) {
-      subStringIndex = Math.min(20, this.text.length);
+    this.storeText(text, trim);
+  }
+
+  private storeText(text, trim) {
+    if (trim) {
+      var parenthesisIndex = this.text.indexOf('(');
+      var bracketIndex = this.text.indexOf('{');
+      var lineFeedIndex = this.text.indexOf('\r');
+      var arrowOperatorIndex = this.text.indexOf('=>');
+      parenthesisIndex = parenthesisIndex < 0 ? this.text.length : (parenthesisIndex + 1);
+      bracketIndex = bracketIndex < 0 ? this.text.length : (bracketIndex + 1);
+      lineFeedIndex = lineFeedIndex < 0 ? this.text.length : (lineFeedIndex + 1);
+      arrowOperatorIndex = arrowOperatorIndex < 0 ? this.text.length : (arrowOperatorIndex + 2);
+      var subStringIndex = Math.min(parenthesisIndex, bracketIndex, lineFeedIndex, arrowOperatorIndex, this.text.length);
+      if (subStringIndex < 0) {
+        subStringIndex = Math.min(20, this.text.length);
+      }
+      var overflow = this.text.length > subStringIndex ? "..." : "";
+      this.text = this.text.substring(0, subStringIndex) + overflow;
     }
-    var overflow = this.text.length > subStringIndex ? "..." : "";
-    this.text = this.text.substring(0, subStringIndex) + overflow
+    else {
+      this.text = text;
+    }
   }
 
   public getSumComplexity(): number {
@@ -76,5 +85,13 @@ export class MetricsModel implements IMetricsModel {
   public getExplanation(): string {
     let allRelevant: MetricsModel[] = [this];
     return allRelevant.map(item => "+" + item.complexity + " for " + item.description + " in Ln " + item.line + ", Col " + item.column).reduce((item1, item2) => item1 + item2);
+  }
+
+  public clone(deepClone?: boolean): IMetricsModel {
+    var model = new MetricsModel(this.start, this.end, this.text, this.line, this.column, this.complexity, this.description, false, this.visible);
+    if (deepClone) {
+      model.children = this.children.map(function (item) { return item.clone(); });
+    }
+    return model;
   }
 }

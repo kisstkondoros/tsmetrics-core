@@ -1,6 +1,6 @@
 "use strict";
 var MetricsModel = (function () {
-    function MetricsModel(start, end, text, line, column, complexity, description, visible) {
+    function MetricsModel(start, end, text, line, column, complexity, description, trim, visible) {
         this.children = [];
         this.start = start;
         this.end = end;
@@ -10,21 +10,29 @@ var MetricsModel = (function () {
         this.complexity = complexity;
         this.visible = !!visible;
         this.description = description;
-        var parenthesisIndex = this.text.indexOf('(');
-        var bracketIndex = this.text.indexOf('{');
-        var lineFeedIndex = this.text.indexOf('\r');
-        var arrowOperatorIndex = this.text.indexOf('=>');
-        parenthesisIndex = parenthesisIndex < 0 ? this.text.length : (parenthesisIndex + 1);
-        bracketIndex = bracketIndex < 0 ? this.text.length : (bracketIndex + 1);
-        lineFeedIndex = lineFeedIndex < 0 ? this.text.length : (lineFeedIndex + 1);
-        arrowOperatorIndex = arrowOperatorIndex < 0 ? this.text.length : (arrowOperatorIndex + 2);
-        var subStringIndex = Math.min(parenthesisIndex, bracketIndex, lineFeedIndex, arrowOperatorIndex, this.text.length);
-        if (subStringIndex < 0) {
-            subStringIndex = Math.min(20, this.text.length);
-        }
-        var overflow = this.text.length > subStringIndex ? "..." : "";
-        this.text = this.text.substring(0, subStringIndex) + overflow;
+        this.storeText(text, trim);
     }
+    MetricsModel.prototype.storeText = function (text, trim) {
+        if (trim) {
+            var parenthesisIndex = this.text.indexOf('(');
+            var bracketIndex = this.text.indexOf('{');
+            var lineFeedIndex = this.text.indexOf('\r');
+            var arrowOperatorIndex = this.text.indexOf('=>');
+            parenthesisIndex = parenthesisIndex < 0 ? this.text.length : (parenthesisIndex + 1);
+            bracketIndex = bracketIndex < 0 ? this.text.length : (bracketIndex + 1);
+            lineFeedIndex = lineFeedIndex < 0 ? this.text.length : (lineFeedIndex + 1);
+            arrowOperatorIndex = arrowOperatorIndex < 0 ? this.text.length : (arrowOperatorIndex + 2);
+            var subStringIndex = Math.min(parenthesisIndex, bracketIndex, lineFeedIndex, arrowOperatorIndex, this.text.length);
+            if (subStringIndex < 0) {
+                subStringIndex = Math.min(20, this.text.length);
+            }
+            var overflow = this.text.length > subStringIndex ? "..." : "";
+            this.text = this.text.substring(0, subStringIndex) + overflow;
+        }
+        else {
+            this.text = text;
+        }
+    };
     MetricsModel.prototype.getSumComplexity = function () {
         return this.children.reduce(function (item1, item2) { return item1 + item2.getSumComplexity(); }, this.complexity);
     };
@@ -63,6 +71,13 @@ var MetricsModel = (function () {
     MetricsModel.prototype.getExplanation = function () {
         var allRelevant = [this];
         return allRelevant.map(function (item) { return "+" + item.complexity + " for " + item.description + " in Ln " + item.line + ", Col " + item.column; }).reduce(function (item1, item2) { return item1 + item2; });
+    };
+    MetricsModel.prototype.clone = function (deepClone) {
+        var model = new MetricsModel(this.start, this.end, this.text, this.line, this.column, this.complexity, this.description, false, this.visible);
+        if (deepClone) {
+            model.children = this.children.map(function (item) { return item.clone(); });
+        }
+        return model;
     };
     return MetricsModel;
 }());

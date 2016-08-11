@@ -10,6 +10,12 @@ export interface IMetricsParser {
 }
 
 export interface IMetricsConfiguration {
+    MetricsForClassDeclarationsToggled?: boolean;
+    MetricsForConstructorDescriptionsToggled?: boolean;
+    MetricsForEnumDeclarationDescriptionsToggled?: boolean;
+    MetricsForFunctionDeclarationsToggled?: boolean;
+    MetricsForFunctionExpressionsToggled?: boolean;
+    MetricsForMethodDeclarationsToggled?: boolean;
     MetricsForArrowFunctionsToggled?: boolean;
     ComplexityLevelExtreme?: number;
     ComplexityLevelHigh?: number;
@@ -181,4 +187,5 @@ export interface IMetricsModel {
     toLogString(level: string): string;
     toString(settings: IMetricsConfiguration): string;
     getExplanation(): string;
+    clone(deepClone?: boolean): IMetricsModel;
 }
