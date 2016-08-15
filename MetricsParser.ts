@@ -7,7 +7,11 @@ import * as ts from 'typescript';
 export class MetricsParserImpl implements IMetricsParser {
     public getMetrics(fileName: string, configuration: IMetricsConfiguration, target: ts.ScriptTarget): IMetricsParseResult {
         const content = readFileSync(fileName);
-        let sourceFile: ts.SourceFile = ts.createSourceFile(fileName, content.toString(), target, true);
+        return this.getMetricsFromText(fileName, content.toString(), configuration, target);
+    }
+
+    public getMetricsFromText(fileName: string, content: string, configuration: IMetricsConfiguration, target: ts.ScriptTarget): IMetricsParseResult {
+        let sourceFile: ts.SourceFile = ts.createSourceFile(fileName, content, target, true);
         let metricsVisitor: MetricsVisitor = new MetricsVisitor(sourceFile);
         let MetricsModel: MetricsModel = new TreeWalker(metricsVisitor, configuration).walk(sourceFile);
         return { file: fileName, metrics: MetricsModel };

@@ -7,6 +7,7 @@ export interface IMetricsParseResult {
 
 export interface IMetricsParser {
     getMetrics(fileName: string, configuration: IMetricsConfiguration, target: ts.ScriptTarget): IMetricsParseResult;
+    getMetricsFromText(fileName: string, content: string, configuration: IMetricsConfiguration, target: ts.ScriptTarget): IMetricsParseResult;
 }
 
 export interface IMetricsConfiguration {
