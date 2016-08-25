@@ -17,7 +17,6 @@
   "author": "Tamas Kiss",
   "license": "MIT",
   "dependencies": {
-    "typescript": "^1.8.10",
-    "fs": "0.0.2"
+    "typescript": "^1.8.10"
   }
 }
