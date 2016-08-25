@@ -7,7 +7,10 @@ var MetricsParserImpl = (function () {
     }
     MetricsParserImpl.prototype.getMetrics = function (fileName, configuration, target) {
         var content = fs_1.readFileSync(fileName);
-        var sourceFile = ts.createSourceFile(fileName, content.toString(), target, true);
+        return this.getMetricsFromText(fileName, content.toString(), configuration, target);
+    };
+    MetricsParserImpl.prototype.getMetricsFromText = function (fileName, content, configuration, target) {
+        var sourceFile = ts.createSourceFile(fileName, content, target, true);
         var metricsVisitor = new MetricsVisitor(sourceFile);
         var MetricsModel = new TreeWalker(metricsVisitor, configuration).walk(sourceFile);
         return { file: fileName, metrics: MetricsModel };
