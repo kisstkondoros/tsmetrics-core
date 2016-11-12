@@ -14,20 +14,15 @@ var MetricsModel = (function () {
     }
     MetricsModel.prototype.storeText = function (text, trim) {
         if (trim) {
-            var parenthesisIndex = this.text.indexOf('(');
-            var bracketIndex = this.text.indexOf('{');
             var lineFeedIndex = this.text.indexOf('\r');
-            var arrowOperatorIndex = this.text.indexOf('=>');
-            parenthesisIndex = parenthesisIndex < 0 ? this.text.length : (parenthesisIndex + 1);
-            bracketIndex = bracketIndex < 0 ? this.text.length : (bracketIndex + 1);
             lineFeedIndex = lineFeedIndex < 0 ? this.text.length : (lineFeedIndex + 1);
-            arrowOperatorIndex = arrowOperatorIndex < 0 ? this.text.length : (arrowOperatorIndex + 2);
-            var subStringIndex = Math.min(parenthesisIndex, bracketIndex, lineFeedIndex, arrowOperatorIndex, this.text.length);
-            if (subStringIndex < 0) {
-                subStringIndex = Math.min(20, this.text.length);
+            var line = this.text.substring(0, lineFeedIndex);
+            if (line.length > 20) {
+                this.text = line.substring(0, 20) + "...";
             }
-            var overflow = this.text.length > subStringIndex ? "..." : "";
-            this.text = this.text.substring(0, subStringIndex) + overflow;
+            else {
+                this.text = line;
+            }
         }
         else {
             this.text = text;
