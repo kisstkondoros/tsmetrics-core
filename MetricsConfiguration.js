@@ -2,8 +2,8 @@
 var MetricsConfiguration = (function () {
     function MetricsConfiguration() {
         this.MetricsForClassDeclarationsToggled = true;
-        this.MetricsForConstructorDescriptionsToggled = true;
-        this.MetricsForEnumDeclarationDescriptionsToggled = true;
+        this.MetricsForConstructorsToggled = true;
+        this.MetricsForEnumDeclarationsToggled = true;
         this.MetricsForFunctionDeclarationsToggled = true;
         this.MetricsForFunctionExpressionsToggled = true;
         this.MetricsForMethodDeclarationsToggled = true;

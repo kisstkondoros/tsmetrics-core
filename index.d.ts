@@ -12,8 +12,8 @@ export interface IMetricsParser {
 
 export interface IMetricsConfiguration {
     MetricsForClassDeclarationsToggled?: boolean;
-    MetricsForConstructorDescriptionsToggled?: boolean;
-    MetricsForEnumDeclarationDescriptionsToggled?: boolean;
+    MetricsForConstructorsToggled?: boolean;
+    MetricsForEnumDeclarationsToggled?: boolean;
     MetricsForFunctionDeclarationsToggled?: boolean;
     MetricsForFunctionExpressionsToggled?: boolean;
     MetricsForMethodDeclarationsToggled?: boolean;

@@ -123,7 +123,7 @@ export class TreeWalker {
                 break;
 
             case ts.SyntaxKind.Constructor:
-                generatedLens = this.visitor.visit(node, this.configuration.Constructor, this.configuration.ConstructorDescription, this.configuration.MetricsForConstructorDescriptionsToggled);
+                generatedLens = this.visitor.visit(node, this.configuration.Constructor, this.configuration.ConstructorDescription, this.configuration.MetricsForConstructorsToggled);
                 break;
 
             case ts.SyntaxKind.ConstructorType:
@@ -151,7 +151,7 @@ export class TreeWalker {
                 break;
 
             case ts.SyntaxKind.EnumDeclaration:
-                generatedLens = this.visitor.visit(node, this.configuration.EnumDeclaration, this.configuration.EnumDeclarationDescription, this.configuration.MetricsForEnumDeclarationDescriptionsToggled);
+                generatedLens = this.visitor.visit(node, this.configuration.EnumDeclaration, this.configuration.EnumDeclarationDescription, this.configuration.MetricsForEnumDeclarationsToggled);
                 break;
 
             case ts.SyntaxKind.ExportAssignment:

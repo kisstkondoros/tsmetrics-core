@@ -97,7 +97,7 @@ var TreeWalker = (function () {
                 generatedLens = this.visitor.visit(node, this.configuration.ConditionalExpression, this.configuration.ConditionalExpressionDescription);
                 break;
             case ts.SyntaxKind.Constructor:
-                generatedLens = this.visitor.visit(node, this.configuration.Constructor, this.configuration.ConstructorDescription, this.configuration.MetricsForConstructorDescriptionsToggled);
+                generatedLens = this.visitor.visit(node, this.configuration.Constructor, this.configuration.ConstructorDescription, this.configuration.MetricsForConstructorsToggled);
                 break;
             case ts.SyntaxKind.ConstructorType:
                 generatedLens = this.visitor.visit(node, this.configuration.ConstructorType, this.configuration.ConstructorTypeDescription);
@@ -118,7 +118,7 @@ var TreeWalker = (function () {
                 generatedLens = this.visitor.visit(node, this.configuration.ElementAccessExpression, this.configuration.ElementAccessExpressionDescription);
                 break;
             case ts.SyntaxKind.EnumDeclaration:
-                generatedLens = this.visitor.visit(node, this.configuration.EnumDeclaration, this.configuration.EnumDeclarationDescription, this.configuration.MetricsForEnumDeclarationDescriptionsToggled);
+                generatedLens = this.visitor.visit(node, this.configuration.EnumDeclaration, this.configuration.EnumDeclarationDescription, this.configuration.MetricsForEnumDeclarationsToggled);
                 break;
             case ts.SyntaxKind.ExportAssignment:
                 generatedLens = this.visitor.visit(node, this.configuration.ExportAssignment, this.configuration.ExportAssignmentDescription);

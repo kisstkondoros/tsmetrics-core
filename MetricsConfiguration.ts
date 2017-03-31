@@ -2,8 +2,8 @@ import {IMetricsConfiguration} from "./index";
 
 export class MetricsConfiguration implements IMetricsConfiguration {
   MetricsForClassDeclarationsToggled = true;
-  MetricsForConstructorDescriptionsToggled = true;
-  MetricsForEnumDeclarationDescriptionsToggled = true;
+  MetricsForConstructorsToggled = true;
+  MetricsForEnumDeclarationsToggled = true;
   MetricsForFunctionDeclarationsToggled = true;
   MetricsForFunctionExpressionsToggled = true;
   MetricsForMethodDeclarationsToggled = true;
