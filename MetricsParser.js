@@ -25,7 +25,8 @@ var MetricsVisitor = (function () {
     }
     MetricsVisitor.prototype.visit = function (node, complexity, description, visible) {
         var _a = this.sourceFile.getLineAndCharacterOfPosition(node.getStart()), line = _a.line, character = _a.character;
-        var result = new MetricsModel_1.MetricsModel(node.getStart(), node.getEnd(), node.getText(), line + 1, character + 1, complexity, description, true, visible);
+        var collectorType = node.kind === ts.SyntaxKind.ClassDeclaration ? "MAX" : "SUM";
+        var result = new MetricsModel_1.MetricsModel(node.getStart(), node.getEnd(), node.getText(), line + 1, character + 1, complexity, description, true, visible, collectorType);
         this.currentModel.children.push(result);
         return result;
     };
@@ -145,7 +146,7 @@ var TreeWalker = (function () {
                 generatedLens = this.visitor.visit(node, this.configuration.FunctionType, this.configuration.FunctionTypeDescription);
                 break;
             case ts.SyntaxKind.GetAccessor:
-                generatedLens = this.visitor.visit(node, this.configuration.GetAccessor, this.configuration.GetAccessorDescription);
+                generatedLens = this.visitor.visit(node, this.configuration.GetAccessor, this.configuration.GetAccessorDescription, this.configuration.MetricsForFunctionExpressionsToggled);
                 break;
             case ts.SyntaxKind.Identifier:
                 generatedLens = this.visitor.visit(node, this.configuration.Identifier, this.configuration.IdentifierDescription);
@@ -232,7 +233,7 @@ var TreeWalker = (function () {
                 generatedLens = this.visitor.visit(node, this.configuration.ReturnStatement, this.configuration.ReturnStatementDescription);
                 break;
             case ts.SyntaxKind.SetAccessor:
-                generatedLens = this.visitor.visit(node, this.configuration.SetAccessor, this.configuration.SetAccessorDescription);
+                generatedLens = this.visitor.visit(node, this.configuration.SetAccessor, this.configuration.SetAccessorDescription, this.configuration.MetricsForFunctionExpressionsToggled);
                 break;
             case ts.SyntaxKind.SourceFile:
                 generatedLens = this.visitor.visit(node, this.configuration.SourceFile, this.configuration.SourceFileDescription);
@@ -280,7 +281,7 @@ var TreeWalker = (function () {
     };
     TreeWalker.prototype.walk = function (node) {
         var _a = node.getSourceFile().getLineAndCharacterOfPosition(node.getStart()), line = _a.line, character = _a.character;
-        var result = new MetricsModel_1.MetricsModel(node.getStart(), node.getEnd(), node.getText(), line + 1, character + 1, 0, "Collector", false);
+        var result = new MetricsModel_1.MetricsModel(node.getStart(), node.getEnd(), node.getText(), line + 1, character + 1, 0, "Collector", false, false, "SUM");
         this.visitNode(node, result);
         return result;
     };

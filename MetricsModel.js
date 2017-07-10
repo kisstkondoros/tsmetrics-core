@@ -1,6 +1,6 @@
 "use strict";
 var MetricsModel = (function () {
-    function MetricsModel(start, end, text, line, column, complexity, description, trim, visible) {
+    function MetricsModel(start, end, text, line, column, complexity, description, trim, visible, collectorType) {
         this.children = [];
         this.start = start;
         this.end = end;
@@ -10,6 +10,7 @@ var MetricsModel = (function () {
         this.complexity = complexity;
         this.visible = !!visible;
         this.description = description;
+        this.collectorType = collectorType;
         this.storeText(text, trim);
     }
     MetricsModel.prototype.storeText = function (text, trim) {
@@ -28,11 +29,16 @@ var MetricsModel = (function () {
             this.text = text;
         }
     };
-    MetricsModel.prototype.getSumComplexity = function () {
-        return this.children.reduce(function (item1, item2) { return item1 + item2.getSumComplexity(); }, this.complexity);
+    MetricsModel.prototype.getCollectedComplexity = function () {
+        if (this.collectorType === "MAX") {
+            return this.children.reduce(function (acc, current) { return Math.max(acc, current.getCollectedComplexity()); }, 0) + this.complexity;
+        }
+        else {
+            return this.children.reduce(function (acc, current) { return acc + current.getCollectedComplexity(); }, this.complexity);
+        }
     };
     MetricsModel.prototype.toLogString = function (level) {
-        var complexity = this.pad(this.getSumComplexity() + "", 5);
+        var complexity = this.pad(this.getCollectedComplexity() + "", 5);
         var line = this.pad(this.line + "");
         var column = this.pad(this.column + "");
         return complexity + " - Ln " + line + " Col " + column + " " + level + " " + this.text;
@@ -43,7 +49,7 @@ var MetricsModel = (function () {
         return pad.substring(0, Math.max(0, pad.length - str.length)) + str;
     };
     MetricsModel.prototype.toString = function (settings) {
-        var complexitySum = this.getSumComplexity();
+        var complexitySum = this.getCollectedComplexity();
         var instruction = '';
         if (complexitySum > settings.ComplexityLevelExtreme) {
             instruction = settings.ComplexityLevelExtremeDescription;
@@ -65,10 +71,10 @@ var MetricsModel = (function () {
     };
     MetricsModel.prototype.getExplanation = function () {
         var allRelevant = [this];
-        return allRelevant.map(function (item) { return "+" + item.complexity + " for " + item.description + " in Ln " + item.line + ", Col " + item.column; }).reduce(function (item1, item2) { return item1 + item2; });
+        return allRelevant.map(function (item) { return "+" + item.getCollectedComplexity() + " for " + item.description + " in Ln " + item.line + ", Col " + item.column; }).reduce(function (item1, item2) { return item1 + item2; });
     };
     MetricsModel.prototype.clone = function (deepClone) {
-        var model = new MetricsModel(this.start, this.end, this.text, this.line, this.column, this.complexity, this.description, false, this.visible);
+        var model = new MetricsModel(this.start, this.end, this.text, this.line, this.column, this.complexity, this.description, false, this.visible, this.collectorType);
         if (deepClone) {
             model.children = this.children.map(function (item) { return item.clone(); });
         }
