@@ -188,7 +188,7 @@ export class TreeWalker {
                 break;
 
             case ts.SyntaxKind.GetAccessor:
-                generatedLens = this.visitor.visit(node, this.configuration.GetAccessor, this.configuration.GetAccessorDescription);
+                generatedLens = this.visitor.visit(node, this.configuration.GetAccessor, this.configuration.GetAccessorDescription, this.configuration.MetricsForFunctionExpressionsToggled);
                 break;
 
             case ts.SyntaxKind.Identifier:
@@ -301,7 +301,7 @@ export class TreeWalker {
                 break;
 
             case ts.SyntaxKind.SetAccessor:
-                generatedLens = this.visitor.visit(node, this.configuration.SetAccessor, this.configuration.SetAccessorDescription);
+                generatedLens = this.visitor.visit(node, this.configuration.SetAccessor, this.configuration.SetAccessorDescription, this.configuration.MetricsForFunctionExpressionsToggled);
                 break;
 
             case ts.SyntaxKind.SourceFile:
