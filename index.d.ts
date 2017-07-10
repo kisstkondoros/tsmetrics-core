@@ -174,6 +174,8 @@ export interface IMetricsConfiguration {
     WithStatementDescription?: string;
 }
 
+export type CollectorType = "SUM" | "MAX";
+
 export interface IMetricsModel {
     line: number;
     column: number;
@@ -184,7 +186,8 @@ export interface IMetricsModel {
     start: number;
     end: number;
     text: string;
-    getSumComplexity(): number;
+    collectorType: CollectorType
+    getCollectedComplexity(): number;
     toLogString(level: string): string;
     toString(settings: IMetricsConfiguration): string;
     getExplanation(): string;
