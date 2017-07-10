@@ -1,5 +1,5 @@
 import {MetricsModel} from './MetricsModel';
-import {IMetricsConfiguration, IMetricsModel, IMetricsParser, IMetricsParseResult} from "./index";
+import {IMetricsConfiguration, IMetricsModel, IMetricsParser, IMetricsParseResult, CollectorType} from "./index";
 
 import {readFileSync} from 'fs';
 import * as ts from 'typescript';
@@ -31,7 +31,8 @@ class MetricsVisitor implements Visitor {
     }
     visit(node: ts.Node, complexity: number, description: string, visible?: boolean): MetricsModel {
         let { line, character } = this.sourceFile.getLineAndCharacterOfPosition(node.getStart());
-        let result: MetricsModel = new MetricsModel(node.getStart(), node.getEnd(), node.getText(), line + 1, character + 1, complexity, description, true, visible);
+        const collectorType: CollectorType = node.kind === ts.SyntaxKind.ClassDeclaration ? "MAX" : "SUM";
+        let result: MetricsModel = new MetricsModel(node.getStart(), node.getEnd(), node.getText(), line + 1, character + 1, complexity, description, true, visible, collectorType);
         this.currentModel.children.push(result);
         return result;
     }
@@ -363,7 +364,7 @@ export class TreeWalker {
 
     public walk(node: ts.Node): MetricsModel {
         let { line, character } = node.getSourceFile().getLineAndCharacterOfPosition(node.getStart());
-        let result: MetricsModel = new MetricsModel(node.getStart(), node.getEnd(), node.getText(), line + 1, character + 1, 0, "Collector", false);
+        let result: MetricsModel = new MetricsModel(node.getStart(), node.getEnd(), node.getText(), line + 1, character + 1, 0, "Collector", false, false, "SUM");
         this.visitNode(node, result);
         return result;
     }

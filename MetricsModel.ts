@@ -1,4 +1,5 @@
-import {IMetricsConfiguration, IMetricsModel} from "./index";
+import * as ts from "typescript";
+import {IMetricsConfiguration, IMetricsModel, CollectorType} from "./index";
 
 export class MetricsModel implements IMetricsModel {
   line: number;
@@ -10,8 +11,9 @@ export class MetricsModel implements IMetricsModel {
   start: number;
   end: number;
   text: string;
+  collectorType: CollectorType;
 
-  constructor(start: number, end: number, text: string, line: number, column: number, complexity: number, description: string, trim?: boolean, visible?: boolean) {
+  constructor(start: number, end: number, text: string, line: number, column: number, complexity: number, description: string, trim: boolean, visible: boolean, collectorType: CollectorType) {
     this.start = start;
     this.end = end;
     this.text = text;
@@ -20,6 +22,7 @@ export class MetricsModel implements IMetricsModel {
     this.complexity = complexity;
     this.visible = !!visible;
     this.description = description;
+    this.collectorType = collectorType;
     this.storeText(text, trim);
   }
 
@@ -39,12 +42,16 @@ export class MetricsModel implements IMetricsModel {
     }
   }
 
-  public getSumComplexity(): number {
-    return this.children.reduce((item1, item2) => item1 + item2.getSumComplexity(), this.complexity);
+  public getCollectedComplexity(): number {
+    if (this.collectorType === "MAX") {
+      return this.children.reduce((acc, current) => Math.max(acc, current.getCollectedComplexity()), 0) + this.complexity;
+    } else {
+      return this.children.reduce((acc, current) => acc + current.getCollectedComplexity(), this.complexity);
+    }
   }
 
   public toLogString(level: string): string {
-    var complexity = this.pad(this.getSumComplexity() + "", 5);
+    var complexity = this.pad(this.getCollectedComplexity() + "", 5);
     var line = this.pad(this.line + "");
     var column = this.pad(this.column + "");
 
@@ -57,7 +64,7 @@ export class MetricsModel implements IMetricsModel {
   }
 
   public toString(settings: IMetricsConfiguration): string {
-    let complexitySum: number = this.getSumComplexity();
+    let complexitySum: number = this.getCollectedComplexity();
     let instruction: string = '';
     if (complexitySum > settings.ComplexityLevelExtreme) {
       instruction = settings.ComplexityLevelExtremeDescription;
@@ -78,11 +85,11 @@ export class MetricsModel implements IMetricsModel {
 
   public getExplanation(): string {
     let allRelevant: MetricsModel[] = [this];
-    return allRelevant.map(item => "+" + item.complexity + " for " + item.description + " in Ln " + item.line + ", Col " + item.column).reduce((item1, item2) => item1 + item2);
+    return allRelevant.map(item => "+" + item.getCollectedComplexity() + " for " + item.description + " in Ln " + item.line + ", Col " + item.column).reduce((item1, item2) => item1 + item2);
   }
 
   public clone(deepClone?: boolean): IMetricsModel {
-    var model = new MetricsModel(this.start, this.end, this.text, this.line, this.column, this.complexity, this.description, false, this.visible);
+    var model = new MetricsModel(this.start, this.end, this.text, this.line, this.column, this.complexity, this.description, false, this.visible, this.collectorType);
     if (deepClone) {
       model.children = this.children.map(function (item) { return item.clone(); });
     }
