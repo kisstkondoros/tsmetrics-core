@@ -114,7 +114,7 @@ export class MetricsConfiguration implements IMetricsConfiguration {
   NewExpressionDescription = 'New expression';
   ObjectBindingPattern = 0;
   ObjectBindingPatternDescription = '';
-  ObjectLiteralExpression = 1;
+  ObjectLiteralExpression = 0;
   ObjectLiteralExpressionDescription = 'Object literal expression';
   Parameter = 0;
   ParameterDescription = 'Parameter';
