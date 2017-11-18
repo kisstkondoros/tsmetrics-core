@@ -1,5 +1,6 @@
 "use strict";
-var MetricsConfiguration = (function () {
+Object.defineProperty(exports, "__esModule", { value: true });
+var MetricsConfiguration = /** @class */ (function () {
     function MetricsConfiguration() {
         this.MetricsForClassDeclarationsToggled = true;
         this.MetricsForConstructorsToggled = true;

@@ -1,8 +1,9 @@
 "use strict";
-var MetricsModel_1 = require('./MetricsModel');
-var fs_1 = require('fs');
-var ts = require('typescript');
-var MetricsParserImpl = (function () {
+Object.defineProperty(exports, "__esModule", { value: true });
+var MetricsModel_1 = require("./MetricsModel");
+var fs_1 = require("fs");
+var ts = require("typescript");
+var MetricsParserImpl = /** @class */ (function () {
     function MetricsParserImpl() {
     }
     MetricsParserImpl.prototype.getMetrics = function (fileName, configuration, target) {
@@ -19,7 +20,7 @@ var MetricsParserImpl = (function () {
 }());
 exports.MetricsParserImpl = MetricsParserImpl;
 exports.MetricsParser = new MetricsParserImpl();
-var MetricsVisitor = (function () {
+var MetricsVisitor = /** @class */ (function () {
     function MetricsVisitor(sourceFile) {
         this.sourceFile = sourceFile;
     }
@@ -32,7 +33,7 @@ var MetricsVisitor = (function () {
     };
     return MetricsVisitor;
 }());
-var TreeWalker = (function () {
+var TreeWalker = /** @class */ (function () {
     function TreeWalker(visitor, configuration) {
         this.visitor = visitor;
         this.configuration = configuration;

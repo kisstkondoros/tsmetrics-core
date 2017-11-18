@@ -1,5 +1,6 @@
 "use strict";
-var MetricsModel = (function () {
+Object.defineProperty(exports, "__esModule", { value: true });
+var MetricsModel = /** @class */ (function () {
     function MetricsModel(start, end, text, line, column, complexity, description, trim, visible, collectorType) {
         this.children = [];
         this.start = start;
