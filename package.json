@@ -16,7 +16,11 @@
   ],
   "author": "Tamas Kiss",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "typescript": "^2.6.1"
-  }
+  },
+  "peerDependencies": {
+    "typescript": "^2.6.1"
+  },
+  "main": "lib/index.js"
 }

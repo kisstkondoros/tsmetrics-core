@@ -5,14 +5,12 @@ Computes complexity in TypeScript / JavaScript files.
 Example usage:
 ```TypeScript
 import * as ts from 'typescript';
-import {IMetricsModel, IMetricsParseResult} from 'tsmetrics-core';
-import {MetricsParser} from 'tsmetrics-core/MetricsParser';
-import {MetricsConfiguration} from 'tsmetrics-core/MetricsConfiguration';
+import { IMetricsModel, IMetricsParseResult, MetricsParser, MetricsConfiguration } from 'tsmetrics-core';
 
 export class ExampleUsage {
 
     public getMetrics(filePath: string) {
-        var metricsForFile: IMetricsParseResult = MetricsParser.getMetrics(filePath, new MetricsConfiguration(), ts.ScriptTarget.ES5);
+        var metricsForFile: IMetricsParseResult = MetricsParser.getMetrics(filePath, MetricsConfiguration, ts.ScriptTarget.ES5);
         this.log(metricsForFile.metrics, "");
     }
 
@@ -23,7 +21,6 @@ export class ExampleUsage {
         });
     }
 }
-
 ```
 
 ### License

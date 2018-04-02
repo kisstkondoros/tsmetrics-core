@@ -2,10 +2,13 @@
   "compilerOptions": {
     "target": "es5",
     "moduleResolution": "node",
-    "outDir": "./",
-    "sourceMap": true
+    "outDir": "./lib",
+    "sourceMap": true,
+    "declaration": true,
+    "rootDir": "src"
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "lib",
   ]
 }

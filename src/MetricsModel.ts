@@ -1,5 +1,25 @@
 import * as ts from "typescript";
-import {IMetricsConfiguration, IMetricsModel, CollectorType} from "./index";
+import { IMetricsConfiguration } from './MetricsConfiguration';
+
+export type CollectorType = "SUM" | "MAX";
+
+export interface IMetricsModel {
+    line: number;
+    column: number;
+    complexity: number;
+    visible: boolean;
+    children: IMetricsModel[];
+    description: string;
+    start: number;
+    end: number;
+    text: string;
+    collectorType: CollectorType
+    getCollectedComplexity(): number;
+    toLogString(level: string): string;
+    toString(settings: IMetricsConfiguration): string;
+    getExplanation(): string;
+    clone(deepClone?: boolean): IMetricsModel;
+}
 
 export class MetricsModel implements IMetricsModel {
   line: number;
