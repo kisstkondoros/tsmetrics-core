@@ -1,7 +1,17 @@
-import {MetricsModel} from './MetricsModel';
-import {IMetricsConfiguration, IMetricsModel, IMetricsParser, IMetricsParseResult, CollectorType} from "./index";
+import { MetricsModel, IMetricsModel, CollectorType } from './MetricsModel';
+import { IMetricsConfiguration } from "./MetricsConfiguration";
 
-import {readFileSync} from 'fs';
+export interface IMetricsParseResult {
+    file: string;
+    metrics: IMetricsModel;
+}
+
+export interface IMetricsParser {
+    getMetrics(fileName: string, configuration: IMetricsConfiguration, target: ts.ScriptTarget): IMetricsParseResult;
+    getMetricsFromText(fileName: string, content: string, configuration: IMetricsConfiguration, target: ts.ScriptTarget): IMetricsParseResult;
+}
+
+import { readFileSync } from 'fs';
 import * as ts from 'typescript';
 
 export class MetricsParserImpl implements IMetricsParser {
@@ -19,11 +29,12 @@ export class MetricsParserImpl implements IMetricsParser {
 }
 export let MetricsParser: IMetricsParser = new MetricsParserImpl();
 
-interface Visitor {
+export interface IMetricsVisitor {
+    currentModel: IMetricsModel;
     visit(node: ts.Node, complexity: number, description: string, visible?: boolean): MetricsModel;
 }
 
-class MetricsVisitor implements Visitor {
+class MetricsVisitor implements IMetricsVisitor {
     sourceFile: ts.SourceFile;
     public currentModel: MetricsModel;
     constructor(sourceFile: ts.SourceFile) {
@@ -40,10 +51,10 @@ class MetricsVisitor implements Visitor {
 
 export class TreeWalker {
 
-    visitor: MetricsVisitor;
+    visitor: IMetricsVisitor;
     configuration: IMetricsConfiguration;
 
-    constructor(visitor: MetricsVisitor, configuration: IMetricsConfiguration) {
+    constructor(visitor: IMetricsVisitor, configuration: IMetricsConfiguration) {
         this.visitor = visitor;
         this.configuration = configuration;
     }
