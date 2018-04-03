@@ -17,6 +17,7 @@
   "author": "Tamas Kiss",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^6.0.104",
     "typescript": "^2.6.1"
   },
   "peerDependencies": {
