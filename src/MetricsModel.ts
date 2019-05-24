@@ -71,7 +71,7 @@ export class MetricsModel implements IMetricsModel {
   }
 
   public toLogString(level: string): string {
-    var complexity = this.pad(this.getCollectedComplexity() + "", 5);
+    var complexity = this.pad(this.roundComplexity(this.getCollectedComplexity() )+ "", 5);
     var line = this.pad(this.line + "");
     var column = this.pad(this.column + "");
 
@@ -100,12 +100,12 @@ export class MetricsModel implements IMetricsModel {
       template = 'Complexity is {0} {1}';
     }
 
-    return template.replace('{0}', complexitySum + '').replace('{1}', instruction)
+    return template.replace('{0}', this.roundComplexity(complexitySum) + '').replace('{1}', instruction)
   }
 
   public getExplanation(): string {
     let allRelevant: MetricsModel[] = [this];
-    return allRelevant.map(item => "+" + item.getCollectedComplexity() + " for " + item.description + " in Ln " + item.line + ", Col " + item.column).reduce((item1, item2) => item1 + item2);
+    return allRelevant.map(item => "+" + this.roundComplexity(item.getCollectedComplexity()) + " for " + item.description + " in Ln " + item.line + ", Col " + item.column).reduce((item1, item2) => item1 + item2);
   }
 
   public clone(deepClone?: boolean): IMetricsModel {
@@ -114,5 +114,8 @@ export class MetricsModel implements IMetricsModel {
       model.children = this.children.map(function (item) { return item.clone(); });
     }
     return model;
+  }
+  private roundComplexity(complexity: number):string {
+    return (+complexity.toFixed(2)).toString();
   }
 }
