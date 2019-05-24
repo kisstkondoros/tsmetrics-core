@@ -115,7 +115,7 @@ export class MetricsModel implements IMetricsModel {
     }
     return model;
   }
-  private roundComplexity(complexity: number):string {
-    return (+complexity.toFixed(2)).toString();
+  private roundComplexity(complexity: number):number {
+    return Number(complexity.toFixed(2));
   }
 }
