@@ -17,11 +17,11 @@
   "author": "Tamas Kiss",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^6.0.104",
-    "typescript": "^2.6.1"
+    "@types/node": "^12.7.2",
+    "typescript": "^3.5.3"
   },
   "peerDependencies": {
-    "typescript": "^2.6.1"
+    "typescript": "^3.5.3"
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts"
