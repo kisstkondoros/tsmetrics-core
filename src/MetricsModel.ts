@@ -61,9 +61,9 @@ export class MetricsModel implements IMetricsModel {
     if (trim) {
       var lineFeedIndex = this.text.indexOf("\r");
       lineFeedIndex = lineFeedIndex < 0 ? this.text.length : lineFeedIndex + 1;
-      var line = this.text.substring(0, lineFeedIndex);
-      if (line.length > 20) {
-        this.text = line.substring(0, 20) + "...";
+      var line = this.text.substring(0, lineFeedIndex).trim();
+      if (line.length > 70) {
+        this.text = line.substring(0, 70).trim() + "...";
       } else {
         this.text = line;
       }
@@ -157,7 +157,7 @@ export class MetricsModel implements IMetricsModel {
       this.collectorType
     );
     if (deepClone) {
-      model.children = this.children.map(function(item) {
+      model.children = this.children.map(function (item) {
         return item.clone();
       });
     }
