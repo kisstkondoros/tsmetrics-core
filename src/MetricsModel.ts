@@ -129,7 +129,7 @@ export class MetricsModel implements IMetricsModel {
     let allRelevant: MetricsModel[] = [this];
     return allRelevant
       .map(
-        item =>
+        (item) =>
           "+" +
           this.roundComplexity(item.getCollectedComplexity()) +
           " for " +
@@ -156,7 +156,7 @@ export class MetricsModel implements IMetricsModel {
       this.collectorType
     );
     if (deepClone) {
-      model.children = this.children.map(function(item) {
+      model.children = this.children.map(function (item) {
         return item.clone();
       });
     }

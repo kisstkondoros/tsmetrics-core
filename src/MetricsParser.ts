@@ -728,10 +728,9 @@ export class TreeWalker {
   }
 
   public walk(node: ts.Node): MetricsModel {
-    let {
-      line,
-      character
-    } = node.getSourceFile().getLineAndCharacterOfPosition(node.getStart());
+    let { line, character } = node
+      .getSourceFile()
+      .getLineAndCharacterOfPosition(node.getStart());
     let result: MetricsModel = new MetricsModel(
       node.getStart(),
       node.getEnd(),
@@ -749,7 +748,7 @@ export class TreeWalker {
   }
 
   protected walkChildren(node: ts.Node, parent: MetricsModel) {
-    ts.forEachChild(node, child => {
+    ts.forEachChild(node, (child) => {
       this.visitNode(child, parent);
     });
   }

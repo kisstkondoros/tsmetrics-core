@@ -159,7 +159,7 @@ export const MetricsConfiguration = {
   WhileStatement: 1,
   WhileStatementDescription: "While statement",
   WithStatement: 1,
-  WithStatementDescription: "With statement"
+  WithStatementDescription: "With statement",
 };
 
 export type IMetricsConfiguration = Partial<typeof MetricsConfiguration>;
