@@ -1,4 +1,3 @@
-import * as ts from "typescript";
 import { IMetricsConfiguration } from "./MetricsConfiguration";
 
 export type CollectorType = "SUM" | "MAX";
@@ -157,7 +156,7 @@ export class MetricsModel implements IMetricsModel {
       this.collectorType
     );
     if (deepClone) {
-      model.children = this.children.map(function (item) {
+      model.children = this.children.map(function(item) {
         return item.clone();
       });
     }
