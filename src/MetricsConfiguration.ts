@@ -81,7 +81,7 @@ export const MetricsConfiguration = {
   GetAccessorDescription: "Get accessor",
   Identifier: 0,
   IdentifierDescription: "Identifier",
-  IfWithElseStatement: 2,
+  IfWithElseStatement: 1,
   IfWithElseStatementDescription: "If with else statement",
   IfStatement: 1,
   IfStatementDescription: "If statement",
