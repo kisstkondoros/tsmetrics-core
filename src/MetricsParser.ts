@@ -1,5 +1,12 @@
+import { readFileSync } from "fs";
+import * as ts from "typescript";
+
 import { MetricsModel, IMetricsModel, CollectorType } from "./MetricsModel";
 import { IMetricsConfiguration } from "./MetricsConfiguration";
+
+interface CodeMetricsTsExpression {
+  __code_metrics_ignore?: boolean;
+}
 
 export interface IMetricsParseResult {
   file: string;
@@ -19,9 +26,6 @@ export interface IMetricsParser {
     target: ts.ScriptTarget
   ): IMetricsParseResult;
 }
-
-import { readFileSync } from "fs";
-import * as ts from "typescript";
 
 export class MetricsParserImpl implements IMetricsParser {
   public getMetrics(
@@ -116,10 +120,17 @@ export class TreeWalker {
   protected visitNode(node: ts.Node, parent: MetricsModel) {
     this.visitor.currentModel = parent;
     let generatedLens: MetricsModel = this.getLens(node);
+    if (
+      generatedLens &&
+      (node as CodeMetricsTsExpression).__code_metrics_ignore
+    ) {
+      generatedLens.complexity = 0;
+    }
     let updatedParent = parent;
     if (generatedLens && generatedLens.visible) {
       updatedParent = generatedLens;
     }
+
     this.walkChildren(node, updatedParent);
   }
 
@@ -201,11 +212,29 @@ export class TreeWalker {
         break;
 
       case ts.SyntaxKind.CallExpression:
+        const callExpression = node as ts.CallExpression;
+        const expression = callExpression.expression;
         generatedLens = this.visitor.visit(
           node,
           this.configuration.CallExpression,
           this.configuration.CallExpressionDescription
         );
+        if (
+          generatedLens &&
+          expression &&
+          expression.kind == ts.SyntaxKind.Identifier
+        ) {
+          const functionName = (expression as ts.Identifier).escapedText;
+          const ignoredFunctionNames =
+            this.configuration.IgnoredFunctionNames || [];
+          if (ignoredFunctionNames.includes(functionName)) {
+            callExpression.arguments.forEach(
+              (argument) =>
+                ((argument as CodeMetricsTsExpression).__code_metrics_ignore =
+                  true)
+            );
+          }
+        }
         break;
 
       case ts.SyntaxKind.CallSignature:

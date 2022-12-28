@@ -1,4 +1,5 @@
 export const MetricsConfiguration = {
+  IgnoredFunctionNames: [],
   MetricsForClassDeclarationsToggled: true,
   MetricsForConstructorsToggled: true,
   MetricsForEnumDeclarationsToggled: true,
