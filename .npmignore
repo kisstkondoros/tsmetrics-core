@@ -1,6 +1,6 @@
+.vscode
+coverage
 src
 node_modules
-typings
 tsconfig.json
-typings.json
-yarn.lock
+vitest.config.ts
